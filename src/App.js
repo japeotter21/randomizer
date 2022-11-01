@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import data from'./data.json'
 import './App.css';
-import { Button, Paper, CircularProgress, Dialog, DialogContent, DialogTitle, DialogActions } from '@material-ui/core';
+import { Button, Paper, CircularProgress, Dialog, DialogContent, DialogTitle, DialogActions, Tooltip } from '@material-ui/core';
 
 function App() {
   const [randoming, setRandoming] = useState(false)
@@ -47,19 +47,19 @@ function App() {
     }
   },[randomize])
 
-  useEffect(()=>{
-    if(!pause)
-    {
-      setTimeout(()=>{
-        setCount(count-1)
-      },[1000])
-      if(count === 0)
-      {
-        Randomizer()
-        setCount(300)
-      }
-    }
-  })
+  // useEffect(()=>{
+  //   if(!pause)
+  //   {
+  //     setTimeout(()=>{
+  //       setCount(count-1)
+  //     },[1000])
+  //     if(count === 0)
+  //     {
+  //       Randomizer()
+  //       setCount(300)
+  //     }
+  //   }
+  // })
 
   function Randomizer() {
     setRandoming(true)
@@ -90,22 +90,30 @@ function App() {
 
   return (
     <div className='App-header'>
-      <Paper elevation={8} variant="elevation" style={{display:'flex', flexDirection:'column', width:'20vw', textAlign:'center', padding:'40px 20px 0 20px', height:'40vh'}}>
+      <Paper elevation={8} variant="elevation" style={{display:'flex', flexDirection:'column', width:'340px', textAlign:'center', padding:'40px 20px 0 20px', height:'400px'}}>
         {randoming ?
         <>
-          <p style={{color:'grey'}}>{data[randomize].effect}</p>
+          <Tooltip title="Effect" placement="top">
+            <p style={{color:'grey'}}>{data[randomize].effect}</p>
+          </Tooltip>
+          <Tooltip title="Preset" placement='top'>
           {data[randomize].note ? <p style={{color:'grey'}}>{data[randomize].presets[preset]}{note}</p> : data[randomize].number ? <p style={{color:'grey'}}>{data[randomize].presets[preset]} ({number})</p>
           :
           <p style={{color:'grey'}}>{data[randomize].presets[preset]}</p>
           }
+          </Tooltip>
         </>
         :
         <>
+          <Tooltip title="Effect" placement='top'>
           <p>{data[randomize].effect}</p>
+          </Tooltip>
+          <Tooltip title="Preset" placement='top'>
           {data[randomize].note ? <p>{data[randomize].presets[preset]}{note}</p> : data[randomize].number ? <p>{data[randomize].presets[preset]} ({number})</p>
           :
           <p>{data[randomize].presets[preset]}</p>
           }
+          </Tooltip>
         </>
         }
         {randoming ?
@@ -115,12 +123,13 @@ function App() {
         }
         <Button onClick={()=>setShow(true)} style={{marginTop:'1vh'}}>Effects Rolled: {store.length - 1}</Button>
         <div style={{display:'flex', justifyContent:'space-between',padding:'0 25px'}}>
-          <p>Rolling again in {count} seconds...</p>
-          { pause ?
+          <p style={{color:'lightgrey'}}>Rolling again in {count} seconds...</p>
+          {/* { pause ?
             <Button onClick={()=>setPause(false)}>Resume</Button>
             :
             <Button onClick={()=>setPause(true)}>Pause</Button>
-          }
+          } */}
+          <Button disabled>Pause</Button>
         </div>
       </Paper>
       <Dialog open={show} onClose={()=>setShow(false)}>
